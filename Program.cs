@@ -1,5 +1,7 @@
 //using System.IO.Pipelines;
 
+using Microsoft.AspNetCore.Identity.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. SERVICIOS
@@ -28,9 +30,29 @@ app.UseHttpsRedirection();
 app.UseCors("NuevaPolitica");
 
 // 3. RUTAS
-var usuarios = new List<Usuario> { new Usuario(1, "1234","raul","zapata", new DateTime(1999, 12, 10), "3502657845","calle 24c #34-33")};
+var usuarios = new List<Usuario> { new Usuario(1, "1234","ramos123","raul","zapata", new DateTime(1999, 12, 10), "3502657845","calle 24c #34-33")};
 
 //creacion de rutas
+
+app.MapPost("/api/usuarios/login",(Login datos) =>
+{
+    const string adminUser= "manolo";
+    const string adminPassword="manolo123"; 
+
+    if (datos.Cedula == adminUser && datos.Password == adminPassword)
+        return Results.Ok(new
+        {
+            mensaje = "Acceso concedido al Panel Administrativo",
+            rol = "Admin",
+            token = "fake-jwt-token-para-fase-1" // 
+        });
+
+    return Results.Json(new { mensaje = "Usuario no registrado o datos incorrectos" }, statusCode: 401);
+});
+    
+
+
+
 app.MapGet("/api/usuarios", () => usuarios);
 
 app.MapPost("/api/usuarios", (Usuario nuevousuario) =>
@@ -45,7 +67,6 @@ app.MapPost("/api/usuarios", (Usuario nuevousuario) =>
     {
         return Results.BadRequest(new { mensaje = "La fecha de nacimiento no es válida (demasiado antigua)." });
     }
-    int nuevoId = usuarios.Any() ? usuarios.Max(u => u.Id) + 1 : 1;
     var Usuario = nuevousuario with { Id = usuarios.Count + 1 };
     usuarios.Add(Usuario);
     return Results.Ok(Usuario);
@@ -75,6 +96,7 @@ app.Run();
 public record Usuario(
     int Id,
     string Cedula,
+    string Password,
     string Nombre,
     string Apellidos,
     DateTime FechaNacimiento,
@@ -94,3 +116,4 @@ public record Usuario(
         }
     }
 }
+record Login(string Cedula,string Password);
