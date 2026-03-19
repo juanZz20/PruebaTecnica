@@ -26,7 +26,6 @@ public static class UsuarioEndpoints
 
         app.MapPost("/api/usuarios", (Usuario nuevousuario, IUsuarioRepository repo) =>
         {
-            // Aquí pegas tu lógica de validación de fechas...
             var hoy = DateTime.Today;
             if (nuevousuario.FechaNacimiento > hoy)
                 return Results.BadRequest(new { mensaje = "La fecha de nacimiento no puede ser futura." });

@@ -11,6 +11,7 @@ public record Usuario(
     string Direccion
 )
 {
-
+        public int Edad => DateTime.Today.Year - FechaNacimiento.Year -
+            (DateTime.Today < FechaNacimiento.AddYears(DateTime.Today.Year - FechaNacimiento.Year) ? 1 : 0);
 }
 public record Login(string Cedula, string Password);

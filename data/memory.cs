@@ -7,7 +7,8 @@ public interface IUsuarioRepository
 }
 public class InMemoryUsuarioRepository : IUsuarioRepository
 {
-    // Mueves tu lista aquí
+  
+  //use una lista que me sirviese de base de datos para mas flexibilidad 
     private readonly List<Usuario> _usuarios = new() {
         new Usuario(1, "1234", "manolo", "zapata", new DateTime(1999, 12, 10), "3502657845", "calle 24c #34-33")
     };
