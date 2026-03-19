@@ -10,7 +10,7 @@ public static class UsuarioEndpoints
         app.MapPost("/api/usuarios/login", (Login datos) =>
 {
     const string adminUser = "manolo";
-    const string adminPassword = "1234"; //la cedula la utilizare como password
+    const string adminPassword = "1234"; 
 
     if (datos.Cedula == adminUser && datos.Password == adminPassword)
         return Results.Ok(new
@@ -22,7 +22,14 @@ public static class UsuarioEndpoints
 
     return Results.Json(new { mensaje = "Usuario no registrado o datos incorrectos" }, statusCode: 401);
 });
-        app.MapGet("/api/usuarios", (IUsuarioRepository repo) => repo.GetAll());
+        app.MapGet("/api/usuarios", (IUsuarioRepository repo) =>
+        {
+            var todos = repo.GetAll();
+            var filtrados = todos.Where(u => u.Id != 1).ToList();
+            return Results.Ok(filtrados);
+        }
+
+        );
 
         app.MapPost("/api/usuarios", (Usuario nuevousuario, IUsuarioRepository repo) =>
         {
