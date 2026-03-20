@@ -7,21 +7,25 @@ public static class UsuarioEndpoints
 {
     public static void MapUsuarioEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/usuarios/login", (Login datos) =>
-{
-    const string adminUser = "manolo";
-    const string adminPassword = "1234"; 
 
-    if (datos.Cedula == adminUser && datos.Password == adminPassword)
-        return Results.Ok(new
+        app.MapPost("/api/usuarios/login", (LoginRequest datos) =>
         {
-            mensaje = "Acceso concedido al Panel Administrativo",
-            rol = "Admin",
-            token = "fake-jwt-token-para-fase-1" // 
-        });
+   
+            //Console.WriteLine($"Nombre recibido: '{datos.Nombre}'");
+            //Console.WriteLine($"Cedula recibida: '{datos.Cedula}'");
 
-    return Results.Json(new { mensaje = "Usuario no registrado o datos incorrectos" }, statusCode: 401);
-});
+            const string adminUser = "manolo";
+            const string adminPassword = "1234";
+            //Console.WriteLine($"Comparación usuario: {datos.Nombre?.Trim().ToLower()} == {adminUser}");
+            //Console.WriteLine($"Comparación clave: {datos.Cedula?.Trim()} == {adminPassword}");
+
+            if (datos.Nombre?.Trim().ToLower() == adminUser && datos.Cedula?.Trim() == adminPassword)
+            {
+                return Results.Ok(new { mensaje = "Acceso concedido", rol = "Admin" });
+            }
+
+            return Results.Unauthorized();
+        });
         app.MapGet("/api/usuarios", (IUsuarioRepository repo) =>
         {
             var todos = repo.GetAll();

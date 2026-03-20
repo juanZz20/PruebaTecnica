@@ -38,3 +38,8 @@ app.MapUsuarioEndpoints();
 // esta linea hace que el servidor pueda arrancar
 app.Run();
 
+public class LoginRequest
+{
+    public string Nombre { get; set; } = string.Empty;
+    public string Cedula { get; set; } = string.Empty;
+}
