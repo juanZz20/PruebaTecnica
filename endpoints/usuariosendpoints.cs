@@ -56,15 +56,15 @@ public static class UsuarioEndpoints
             return Results.Ok(new { mensaje = "Usuario eliminado", id });
         });
 
-            app.MapPut("/api/usuarios/{id}", (int id, Usuario usuarioeditado,IUsuarioRepository repo) =>
-            {
-                var lista = repo.GetAll();
-                var index = lista.FindIndex(u => u.Id == id);
-                if (index == -1) return Results.NotFound();
+                app.MapPut("/api/usuarios/{cedula}", (string cedula, Usuario usuarioeditado,IUsuarioRepository repo) =>
+                {
+                    var lista = repo.GetAll();
+                    var index = lista.FindIndex(c => c.Cedula == cedula);
+                    if (index == -1) return Results.NotFound();
 
-                lista[index] = usuarioeditado with { Id = id };
-                return Results.Ok(lista[index]);
-            });
+                    lista[index] = usuarioeditado with { Cedula = cedula };
+                    return Results.Ok(lista[index]);
+                });
 
 
     }
